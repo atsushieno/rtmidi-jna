@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-20.04, macos-latest, windows-latest]
     steps:
     - name: checkout
       uses: actions/checkout@v2.3.4
@@ -22,6 +22,11 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: apt update (on Linux)
+      if: matrix.os == 'ubuntu-20.04'
+      run: |
+        sudo apt-get update
+        echo y | sudo apt-get install doxygen cmake ninja-build libasound2-dev libjack-jackd2-dev
     - name: build on Unix-y OS
       run: |
         cd external/rtmidi
@@ -29,13 +34,16 @@ jobs:
         cmake -S . -B build
         cmake --build build
         find build
+        cd ../..
          ./gradlew --warning-mode all build
       if: matrix.os != 'windows-latest'
     - name: build on Windows
       run: |
-        cd external\rtmidi\msw
-        msbuild
+        cd external\rtmidi
+        mkdir build
+        cmake -S . -B build
+        cmake --build build
         dir /d
-        cd ..\..\..
+        cd ..\..
         gradlew.bat --warning-mode all build
       if: matrix.os == 'windows-latest'
