@@ -1,0 +1,3 @@
+rootProject.name = 'rtmidi-jna-project'
+include ':rtmidi-jna'
+
