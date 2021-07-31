@@ -49,7 +49,7 @@ project(':rtmidi-jna') {
 	sourceSets {
 		main {
 			resources {
-				srcDirs "build/generated-sources/jnaerator/natives"
+				srcDirs "natives"
 			}
 		}
 	}
