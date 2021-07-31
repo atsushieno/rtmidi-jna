@@ -91,7 +91,7 @@ jobs:
         name: rtmidi-lib-windows
     - name: relocate artifacts
       run:
-        mv ./librtmidi.so ./librtmidi.dylib ./rtmidi.dll ./rtmidi.pdb rtmidi-jna/
+        mv ./librtmidi.so ./librtmidi.dylib ./rtmidi.dll ./rtmidi.pdb rtmidi-jna/natives/
     - name: publish jar
       run:
          ./gradlew --warning-mode all publish

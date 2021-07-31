@@ -20,7 +20,7 @@ plugins {
 }
 
 group 'dev.atsushieno'
-version '0.1.0'
+version '0.1.1'
 
 repositories {
 	mavenLocal()
@@ -43,13 +43,13 @@ project(':rtmidi-jna') {
 		libraryName 'rtmidi'
 		packageName 'dev.atsushieno.rtmidi-jna'
 		headerFiles "../external/rtmidi/rtmidi_c.h"
-		extraArgs "-arch", "linux_x64", "$rootDir/rtmidi-jna/librtmidi.so", "-arch", "darwin_universal", "$rootDir/rtmidi-jna/librtmidi.dylib", "-arch", "win64", "$rootDir/rtmidi-jna/rtmidi.dll"
+		extraArgs "-arch", "linux_x64", "$rootDir/rtmidi-jna/natives/librtmidi.so", "-arch", "darwin_universal", "$rootDir/rtmidi-jna/natives/librtmidi.dylib", "-arch", "win64", "$rootDir/rtmidi-jna/natives/rtmidi.dll"
 	}
 
 	sourceSets {
 		main {
 			resources {
-				srcDirs "build/generated-sources/jnaerator/"
+				srcDirs "build/generated-sources/jnaerator/natives"
 			}
 		}
 	}
