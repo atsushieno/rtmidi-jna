@@ -62,7 +62,7 @@ publishing {
 
 		pom {
 			name.set('rtmidi-jna')
-			description.set('rtmidi JNA binding')
+			description.set('rtmidi JNA binding with prebuilt binaries')
 			url.set('https://github.com/atsushieno/rtmidi-jna')
 			scm {
 				url.set('https://github.com/atsushieno/rtmidi-jna')
