@@ -41,7 +41,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: rtmidi-lib-linux
-        path: external/rtmidi/build/librtmidi.so*
+        path: external/rtmidi/build/librtmidi.so
     - name: upload artifact - macOS
       if: success() && matrix.os == 'macos-10.15'
       uses: actions/upload-artifact@v2
@@ -49,9 +49,6 @@ jobs:
         name: rtmidi-lib-macos
         path: |
           external/rtmidi/build/librtmidi.dylib
-          external/rtmidi/build/librtmidi.5.dylib
-          external/rtmidi/build/librtmidi.5.0.0.dylib
-
     - name: build on Windows
       if: success() && matrix.os == 'windows-latest'
       run: |
@@ -62,7 +59,7 @@ jobs:
         cd ..\..
         start-process gradlew.bat build
     - name: upload artifact - Windows
-      if: success() && matrix.os == 'macos-10.15'
+      if: success() && matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v2
       with:
         name: rtmidi-lib-windows
