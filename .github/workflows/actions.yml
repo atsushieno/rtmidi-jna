@@ -84,6 +84,9 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: rtmidi-lib-windows
+    - name: relocate artifacts
+      run:
+        mv ./librtmidi.so ./librtmidi.dylib ./rtmidi.dll ./rtmidi.pdb rtmidi-jna/
     - name: build jar
       run:
          ./gradlew --warning-mode all build
