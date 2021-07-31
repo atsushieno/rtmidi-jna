@@ -33,7 +33,6 @@ jobs:
         mkdir build
         cmake -S . -B build
         cmake --build build
-        find build
         cd ../..
          ./gradlew --warning-mode all build
       if: matrix.os != 'windows-latest'
@@ -56,9 +55,8 @@ jobs:
         mkdir build
         cmake -S . -B build
         cmake --build build
-        ls build -recurse
         cd ..\..
-        start-process gradlew.bat --warning-mode all build
+        start-process gradlew.bat build
     - name: upload artifact - Windows
       if: success() && matrix.os == 'macos-10.15'
       uses: actions/upload-artifact@v2
