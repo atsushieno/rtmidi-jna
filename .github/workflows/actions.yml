@@ -59,3 +59,10 @@ jobs:
         ls build -recurse
         cd ..\..
         start-process gradlew.bat --warning-mode all build
+    - name: upload artifact - Windows
+      if: success() && matrix.os == 'macos-10.15'
+      uses: actions/upload-artifact@v2
+      with:
+        name: rtmidi.dll
+        path: external\rtmidi\build\Debug\rtmidi.*
+
