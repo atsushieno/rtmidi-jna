@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_and_test:
+  build_rtmidi_natives:
     name: 'build on ${{ matrix.os }}'
     runs-on: ${{ matrix.os }}
     strategy:
@@ -18,10 +18,6 @@ jobs:
       uses: actions/checkout@v2.3.4
       with:
         submodules: true
-    - name: set up JDK 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
     - name: apt update (on Linux)
       if: matrix.os == 'ubuntu-20.04'
       run: |
@@ -35,7 +31,6 @@ jobs:
         cmake -S . -B build
         cmake --build build
         cd ../..
-         ./gradlew --warning-mode all build
     - name: upload artifact - Ubuntu
       if: success() && matrix.os == 'ubuntu-20.04'
       uses: actions/upload-artifact@v2
@@ -57,7 +52,6 @@ jobs:
         cmake -S . -B build
         cmake --build build
         cd ..\..
-        start-process gradlew.bat build
     - name: upload artifact - Windows
       if: success() && matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v2
@@ -65,3 +59,32 @@ jobs:
         name: rtmidi-lib-windows
         path: external\rtmidi\build\Debug\rtmidi.*
 
+  build_jar:
+    name: 'build Jar'
+    needs: build_rtmidi_natives
+    runs-on: 'ubuntu-20.04'
+    - name: set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: download artifacts - Linux
+      uses: actions/download-artifact@v2
+      with:
+        name: rtmidi-lib-linux
+    - name: download artifacts - Mac
+      uses: actions/download-artifact@v2
+      with:
+        name: rtmidi-lib-macos
+    - name: download artifacts - Windows
+      uses: actions/download-artifact@v2
+      with:
+        name: rtmidi-lib-windows
+    - name: build jar
+      run:
+         ./gradlew --warning-mode all build
+    - name: upload artifact - Jar
+      if: success()
+      uses: actions/upload-artifact@v2
+      with:
+        name: rtmidi-jna-jars
+        path: build/libs/*.jar
