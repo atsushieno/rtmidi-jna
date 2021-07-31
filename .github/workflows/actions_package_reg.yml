@@ -72,6 +72,7 @@ jobs:
       run: sudo bash -c "echo '$GPG_KEY_CONTENTS' | base64 -d > '$SIGNING_SECRET_KEY_RING_FILE'"
       env:
         GPG_KEY_CONTENTS: ${{ secrets.GPG_KEY_CONTENTS }}
+        SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
     - name: rewrite build.gradle to require signing
       run: sed -i "s/signing {}/signing { sign(publishing.publications) }/" rtmidi-jna/build.gradle
     - name: set up JDK 11
