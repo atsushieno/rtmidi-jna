@@ -43,7 +43,15 @@ project(':rtmidi-jna') {
 		libraryName 'rtmidi'
 		packageName 'dev.atsushieno.rtmidi-jna'
 		headerFiles "../external/rtmidi/rtmidi_c.h"
-		//extraArgs "-f -skipDeprecated"
+		extraArgs "-arch", "linux_x64", "$rootDir/rtmidi-jna/librtmidi.so", "-arch", "darwin_universal", "$rootDir/rtmidi-jna/librtmidi.dylib", "-arch", "win64", "$rootDir/rtmidi-jna/rtmidi.dll"
+	}
+
+	sourceSets {
+		main {
+			resources {
+				srcDirs "build/generated-sources/jnaerator/"
+			}
+		}
 	}
 }
 
