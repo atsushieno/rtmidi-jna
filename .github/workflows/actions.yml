@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, macos-latest, windows-latest]
+        os: [ubuntu-20.04, macos-10.15, windows-latest]
     steps:
     - name: checkout
       uses: actions/checkout@v2.3.4
@@ -37,13 +37,25 @@ jobs:
         cd ../..
          ./gradlew --warning-mode all build
       if: matrix.os != 'windows-latest'
+    - name: upload artifact - Ubuntu
+      if: success() && matrix.os == 'ubuntu-20.04'
+      uses: actions/upload-artifact@v2
+      with:
+        name: librtmidi.so
+        path: build/librtmidi.so*
+    - name: upload artifact - macOS
+      if: success() && matrix.os == 'macos-10.15'
+      uses: actions/upload-artifact@v2
+      with:
+        name: librtmidi.dylib
+        path: build/librtmidi*.dylib
     - name: build on Windows
       run: |
         cd external\rtmidi
         mkdir build
         cmake -S . -B build
         cmake --build build
-        dir /d
+        cmd /c dir /d
         cd ..\..
         gradlew.bat --warning-mode all build
       if: matrix.os == 'windows-latest'
