@@ -1,7 +1,8 @@
 name: 'build'
 
 on:
-  tags:
+  create:
+    tags:
 
 jobs:
   build_rtmidi_natives:
