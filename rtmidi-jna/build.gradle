@@ -4,6 +4,7 @@ buildscript {
 	repositories {
 		mavenLocal()
 		mavenCentral()
+		maven { url 'https://plugins.gradle.org/m2' }
 		maven { url 'https://jitpack.io' }
 	}
 	dependencies {
@@ -17,6 +18,7 @@ plugins {
 	id "maven-publish"
 	id "signing"
 	id 'dev.atsushieno.jnaerator'
+	id "me.champeau.gradle.japicmp" version '0.4.0'
 }
 
 group 'dev.atsushieno'
@@ -28,6 +30,10 @@ repositories {
 	maven { url 'https://jitpack.io' }
 }
 
+configurations {
+	baseline
+}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(8)
@@ -37,6 +43,10 @@ java {
 project(':rtmidi-jna') {
 	dependencies {
 		compileOnly 'com.nativelibs4java:jnaerator-runtime:0.12'
+		baseline('dev.atsushieno:rtmidi-jna:0.1.1') {
+			transitive = false
+			force = true
+		}
 	}
 
 	jnaerator {
@@ -55,7 +65,21 @@ project(':rtmidi-jna') {
 	}
 }
 
+// check API breakage
+tasks.register("japicmp", me.champeau.gradle.japicmp.JapicmpTask) {
+	oldClasspath.from(configurations.baseline)
+	newClasspath.from(files(jar.archivePath))
+	onlyBinaryIncompatibleModified = true
+	failOnModification = true
+	txtOutputFile = file("$buildDir/reports/japi.txt")
+	ignoreMissingClasses = true
+	includeSynthetic = true
+}
 
+check.dependsOn(japicmp)
+
+
+// publisher settings
 publishing {
 	publications.all {
 		from components.java
