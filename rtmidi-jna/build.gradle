@@ -1,5 +1,5 @@
 buildscript {
-	ext.kotlin_version = '1.5.20'
+	ext.kotlin_version = '1.6.10'
 
 	repositories {
 		mavenLocal()
@@ -22,7 +22,7 @@ plugins {
 }
 
 group 'dev.atsushieno'
-version '0.1.1'
+version '0.1.2'
 
 repositories {
 	mavenLocal()
@@ -36,7 +36,7 @@ configurations {
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(8)
+		languageVersion = JavaLanguageVersion.of(14)
 	}
 }
 
@@ -53,7 +53,8 @@ project(':rtmidi-jna') {
 		libraryName 'rtmidi'
 		packageName 'dev.atsushieno.rtmidi-jna'
 		headerFiles "../external/rtmidi/rtmidi_c.h"
-		extraArgs "-arch", "linux_x64", "$rootDir/rtmidi-jna/natives/librtmidi.so", "-arch", "darwin_universal", "$rootDir/rtmidi-jna/natives/librtmidi.dylib", "-arch", "win64", "$rootDir/rtmidi-jna/natives/rtmidi.dll"
+		// FIXME: sort out how to package those shared libraries to the right location (currently they are packages to the top directory)
+		extraArgs "-arch", "linux_x64", "$rootDir/rtmidi-jna/natives/librtmidi.so", "-arch", "darwin_universal", "$rootDir/rtmidi-jna/natives/librtmidi.dylib", "-arch", "win64", "$rootDir/rtmidi-jna/natives/rtmidi.dll", "-runtime", "JNA" //, "-mode", "StandaloneJar"
 	}
 
 	sourceSets {
@@ -67,9 +68,9 @@ project(':rtmidi-jna') {
 
 // check API breakage
 tasks.register("japicmp", me.champeau.gradle.japicmp.JapicmpTask) {
-	oldClasspath.from(configurations.baseline)
-	newClasspath.from(files(jar.archivePath))
-	onlyBinaryIncompatibleModified = true
+	oldArchives.from(configurations.baseline)
+	newArchives.from(files(jar.archivePath))
+	onlyModified = true
 	failOnModification = true
 	txtOutputFile = file("$buildDir/reports/japi.txt")
 	ignoreMissingClasses = true
